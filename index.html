@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Guardian Scraper</title>
+  </head>
+  <body>
+    <h1>Guardian News API</h1>
+    <textarea id="query-data" rows="20" cols="100"></textarea>
+    <br />
+    <button onclick="runQuery()">Run</button>
+    <br />
+    <h3>Individual article counts</h3>
+    <div id="results-single">
+
+    </div>
+    <h3>Pair wise article counts</h3>
+    <div id="results-pairs">
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      Array.prototype.pairs = function (func) {
+        for (var i = 0; i < this.length - 1; i++) {
+            for (var j = i; j < this.length - 1; j++) {
+                func([this[i], this[j+1]]);
+            }
+        }
+      }
+      function runQuery() {
+        console.log("starting runQuery");
+        var queryText = $("#query-data").val();
+        var queryArray = queryText.split(" ");
+        queryArray.forEach(function (queryOne) {
+          var url = "http://content.guardianapis.com/search";
+          url += '?' + $.param({
+            'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
+            'q': queryOne
+          });
+          $.ajax({
+            url: url,
+            method: 'GET',
+          }).done(function(result) {
+            console.log(result.response)
+            console.log(result.response.total)
+            $("#results-single").append("<p>" + queryOne + " : " + result.response.total + "</p>");
+          }).fail(function(err) {
+            console.log(err);
+          });
+        })
+        queryPairs = queryArray.pairs( function (pair) {
+          console.log(pair[0], pair[1])
+          var queryPair = pair[0] + " " + pair[1];
+          console.log(queryPair);
+          var url = "http://content.guardianapis.com/search";
+          url += '?' + $.param({
+            'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
+            'q': queryPair
+          });
+          console.log(url)
+          $.ajax({
+            url: url,
+            method: 'GET',
+          }).done(function(result) {
+            console.log(result.response)
+            console.log(result.response.total)
+            $("#results-pairs").append("<p>" + queryPair + " : " + result.response.total + "</p>");
+          }).fail(function(err) {
+            console.log(err);
+          });
+        })
+      }
+    </script>
+  </body>
+</html>
