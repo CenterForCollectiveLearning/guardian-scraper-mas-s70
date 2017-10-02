@@ -4,6 +4,9 @@
   </head>
   <body>
     <h1>Guardian News API</h1>
+    <p>
+      Separate search terms with a new line
+    </p>
     <textarea id="query-data" rows="20" cols="100"></textarea>
     <br />
     <button onclick="runQuery()">Run</button>
@@ -15,9 +18,11 @@
     <h3>Pair wise article counts</h3>
     <div id="results-pairs">
 
+    <button id="download-button" style="display:none;" onclick="downloadData()">Download as CSV</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
+      window.data = [['term', 'occurrences']];
       Array.prototype.pairs = function (func) {
         for (var i = 0; i < this.length - 1; i++) {
             for (var j = i; j < this.length - 1; j++) {
@@ -28,7 +33,8 @@
       function runQuery() {
         console.log("starting runQuery");
         var queryText = $("#query-data").val();
-        var queryArray = queryText.split(" ");
+        console.log(queryText);
+        var queryArray = queryText.split("\n");
         queryArray.forEach(function (queryOne) {
           var url = "https://content.guardianapis.com/search";
           url += '?' + $.param({
@@ -39,8 +45,7 @@
             url: url,
             method: 'GET',
           }).done(function(result) {
-            console.log(result.response)
-            console.log(result.response.total)
+            window.data.push([ queryOne, result.response.total ])
             $("#results-single").append("<p>" + queryOne + " : " + result.response.total + "</p>");
           }).fail(function(err) {
             console.log(err);
@@ -60,13 +65,29 @@
             url: url,
             method: 'GET',
           }).done(function(result) {
-            console.log(result.response)
-            console.log(result.response.total)
+            window.data.push([ queryPair, result.response.total ])            
             $("#results-pairs").append("<p>" + queryPair + " : " + result.response.total + "</p>");
           }).fail(function(err) {
             console.log(err);
           });
         })
+
+        document.getElementById('download-button').style.display = 'block'
+      }
+
+      function downloadData() {
+        var data = window.data;
+        var csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(infoArray, index){
+          dataString = infoArray.join(",");
+          csvContent += index < data.length ? dataString+ "\n" : dataString;
+        });
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "guardian_data.csv");
+        document.body.appendChild(link);
+        link.click();
       }
     </script>
   </body>
