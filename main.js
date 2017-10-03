@@ -9,12 +9,12 @@ Array.prototype.pairs = function (func) {
 }
 
 Array.prototype.triplets = function (func) {
-	for (var i = 0; i < this.length - 1; i++) {
-	    for (var j = i; j < this.length - 1; j++) {
-	    	for (var k = j; k < this.length - 1; k++) {
-	        func([this[i], this[j+1], this[k+2]]);
-	      }
-	    }
+	for (var i = 0; i < this.length - 2; i++) {
+    for (var j = i; j < this.length - 2; j++) {
+    	for (var k = j; k < this.length - 2; k++) {
+        func([this[i], this[j + 1], this[k + 2]]);
+      }
+    }
 	}
 }
 
@@ -22,6 +22,14 @@ function runQuery() {
 	var queryText = $("#query-data").val();
 	var queryArray = queryText.split("\n");
 	var queryLength = queryArray.length;
+
+	window.dataArray = [];
+	window.dataObject = {
+		"single": [],
+		"pair": [],
+		"triplet": []
+	};
+	$(".results").empty();
 
 	if (queryLength >= 1) {
 		queryArray.forEach(function (queryOne) {
@@ -34,7 +42,8 @@ function runQuery() {
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.data.push([ queryOne, result.response.total ])
+		    window.dataArray.push([ queryOne, result.response.total ])
+		    window.dataObject["single"][queryOne] = result.response.total
 		    $("#results-single").append("<p>" + queryOne + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -57,7 +66,8 @@ function runQuery() {
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.data.push([ queryPair, result.response.total ])            
+		    window.dataArray.push([ queryPair, result.response.total ])
+		    window.dataObject["pair"][queryPair] = result.response.total
 		    $("#results-pairs").append("<p>" + queryPair + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -80,7 +90,8 @@ function runQuery() {
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.data.push([ queryTriplet, result.response.total ])            
+		    window.dataArray.push([ queryTriplet, result.response.total ])      
+		    window.dataObject["triplet"][queryTriplet] = result.response.total        
 		    $("#results-triplets").append("<p>" + queryTriplet + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -88,20 +99,31 @@ function runQuery() {
 		})	
 	}
 
-	document.getElementById('download-button').style.display = 'block'
+	$('.download-button').css('display', 'block');
 }
 
-function downloadData() {
-	var data = window.data;
-	var csvContent = "data:text/csv;charset=utf-8,";
-	data.forEach(function(infoArray, index){
-	  dataString = infoArray.join(",");
-	  csvContent += index < data.length ? dataString+ "\n" : dataString;
-	});
-	var encodedUri = encodeURI(csvContent);
+function downloadData(filetype) {
+	var dataArray = window.dataArray;
+	var dataObject = window.dataObject;
+	var content = ''
+
+	if (filetype == "csv") {
+		content = "data:text/csv;charset=utf-8,";
+		dataArray.forEach(function(infoArray, index){
+		  dataString = infoArray.join(",");
+		  content += index < data.length ? dataString+ "\n" : dataString;
+		});
+	}
+
+	if (filetype == "json") {
+		var str = JSON.stringify(dataObject);
+		content = "data:application/json;charset=utf-8," + encodeURIComponent(str);
+	}
+
+	var encodedUri = encodeURI(content);
 	var link = document.createElement("a");
 	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", "guardian_data.csv");
+	link.setAttribute("download", "guardian_data." + filetype );
 	document.body.appendChild(link);
 	link.click();
 }

@@ -17,17 +17,15 @@
     <button onclick="runQuery()">Run</button>
     <br />
     <h3>Individual article counts</h3>
-    <div id="results-single">
-    </div>
+    <div id="results-single" class="results"></div>
     <h3>Pair wise article counts</h3>
-    <div id="results-pairs">
-    </div>
+    <div id="results-pairs" class="results"></div>
 
     <h3>Triplet article counts</h3>
-    <div id="results-triplets">      
-    </div>
+    <div id="results-triplets" class="results"></div>    
 
-    <button id="download-button" style="display:none;" onclick="downloadData()">Download as CSV</button>
+    <button class="download-button" style="display:none;" onclick="downloadData('csv')">Download as CSV</button>
+    <button class="download-button" style="display:none;" onclick="downloadData('json')">Download as JSON</button>
     </div>
 
   </body>
