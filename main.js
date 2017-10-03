@@ -1,5 +1,3 @@
-window.data = [['term', 'occurrences']];
-
 Array.prototype.pairs = function (func) {
 	for (var i = 0; i < this.length - 1; i++) {
 	    for (var j = i; j < this.length - 1; j++) {
@@ -23,12 +21,13 @@ function runQuery() {
 	var queryArray = queryText.split("\n");
 	var queryLength = queryArray.length;
 
-	window.dataArray = [];
+	window.dataArray = [['term', 'occurrences']];
 	window.dataObject = {
-		"single": [],
-		"pair": [],
-		"triplet": []
-	};
+		"single": {},
+		"pair": {},
+		"triplet": {}
+	};	
+
 	$(".results").empty();
 
 	if (queryLength >= 1) {
@@ -107,12 +106,15 @@ function downloadData(filetype) {
 	var dataObject = window.dataObject;
 	var content = ''
 
+	console.log(dataArray, dataObject);
+
 	if (filetype == "csv") {
 		content = "data:text/csv;charset=utf-8,";
 		dataArray.forEach(function(infoArray, index){
 		  dataString = infoArray.join(",");
-		  content += index < data.length ? dataString+ "\n" : dataString;
+		  content += index < dataArray.length ? dataString + "\n" : dataString;
 		});
+		content = encodeURI(content);
 	}
 
 	if (filetype == "json") {
@@ -120,9 +122,8 @@ function downloadData(filetype) {
 		content = "data:application/json;charset=utf-8," + encodeURIComponent(str);
 	}
 
-	var encodedUri = encodeURI(content);
 	var link = document.createElement("a");
-	link.setAttribute("href", encodedUri);
+	link.setAttribute("href", content);
 	link.setAttribute("download", "guardian_data." + filetype );
 	document.body.appendChild(link);
 	link.click();
