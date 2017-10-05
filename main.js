@@ -53,20 +53,21 @@ function runQuery() {
 	if (queryLength >= 2) {
 		queryPairs = queryArray.pairs( function (pair) {
 		  console.log(pair[0], pair[1])
-		  var queryPair = pair[0] + " " + pair[1];
-		  console.log(queryPair);
+		  var queryPair = pair.join(' ');
+		  var queryPairSemicolonSep = pair.join(';');
+
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
 		    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
 		    'q': queryPair
 		  });
-		  console.log(url)
+
 		  $.ajax({
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.dataArray.push([ queryPair, result.response.total ])
-		    window.dataObject["pair"][queryPair] = result.response.total
+		    window.dataArray.push([ queryPairSemicolonSep, result.response.total ])
+		    window.dataObject["pair"][queryPairSemicolonSep] = result.response.total
 		    $("#results-pairs").append("<p>" + queryPair + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -76,21 +77,20 @@ function runQuery() {
 
 	if (queryLength >= 3) {
 		queryTriplets = queryArray.triplets( function (triplet) {
-		  console.log(triplet[0], triplet[1], triplet[2])
-		  var queryTriplet = triplet[0] + " " + triplet[1] + " " + triplet[2];
-		  console.log(queryTriplet);
+		  var queryTriplet = triplet.join(' ');
+		  var queryTripletSemicolonSep = triplet.join(';');
+
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
 		    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
 		    'q': queryTriplet
 		  });
-		  console.log(url)
 		  $.ajax({
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.dataArray.push([ queryTriplet, result.response.total ])      
-		    window.dataObject["triplet"][queryTriplet] = result.response.total        
+		    window.dataArray.push([ queryTripletSemicolonSep, result.response.total ])      
+		    window.dataObject["triplet"][queryTripletSemicolonSep] = result.response.total        
 		    $("#results-triplets").append("<p>" + queryTriplet + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -105,8 +105,6 @@ function downloadData(filetype) {
 	var dataArray = window.dataArray;
 	var dataObject = window.dataObject;
 	var content = ''
-
-	console.log(dataArray, dataObject);
 
 	if (filetype == "csv") {
 		content = "data:text/csv;charset=utf-8,";
