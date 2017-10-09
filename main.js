@@ -53,7 +53,7 @@ function runQuery() {
 	if (queryLength >= 2) {
 		queryPairs = queryArray.pairs( function (pair) {
 		  console.log(pair[0], pair[1])
-		  var queryPair = pair.join(' ');
+		  var queryPair = pair.join(' AND ');
 		  var queryPairSemicolonSep = pair.join(';');
 
 		  var url = "https://content.guardianapis.com/search";
@@ -77,7 +77,7 @@ function runQuery() {
 
 	if (queryLength >= 3) {
 		queryTriplets = queryArray.triplets( function (triplet) {
-		  var queryTriplet = triplet.join(' ');
+		  var queryTriplet = triplet.join(' AND ');
 		  var queryTripletSemicolonSep = triplet.join(';');
 
 		  var url = "https://content.guardianapis.com/search";
