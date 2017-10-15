@@ -16,9 +16,21 @@ Array.prototype.triplets = function (func) {
 	}
 }
 
+function addQuotesIfSpace(s) {
+	if ( s.indexOf(' ') >= 0 ) {
+		return '"' + s + '"'
+	} else {
+		return s;
+	}
+}
+
+String.prototype.trim = function() {
+  return this.replace(/^\s+|\s+$/g, "");
+};
+
 function runQuery() {
-	var queryText = $("#query-data").val();
-	var queryArray = queryText.split("\n");
+	var queryText = $("#query-data").val().trim();
+	var queryArray = queryText.split("\n").map(addQuotesIfSpace);
 	var queryLength = queryArray.length;
 
 	window.dataArray = [['term', 'occurrences']];
