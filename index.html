@@ -8,32 +8,43 @@
   </head>
   <body>
     <h1>Guardian News API</h1>
+    <p class="small-text">
+      This is a thin wrapper around the Guardian API that allows you to enter a set
+      of search terms and get back results on how many Guardian articles these terms have appeared in (both individually and together).
+    </p>
     <p>
       Paste API key below (<a href="https://bonobo.capi.gutools.co.uk/register/developer">use this link to get your API key from Guardian</a>, it will be emailed to you)
     </p>
     <input id="api-key-input" type="text"
-      style="width: 400px" placeholder="your-api-key" />
-    <br />
-    <p>
-      Separate search terms with a new line
-    </p>
-    <textarea id="query-data" rows="20" cols="100"></textarea>
-    <br>
-    <button onclick="runQuery()" class="button">
-      Run
-    </button>
-    <br />
-    <h3>Individual article counts</h3>
-    <div id="results-single" class="results"></div>
-    <h3>Pair wise article counts</h3>
-    <div id="results-pairs" class="results"></div>
-
-    <h3>Triplet article counts</h3>
-    <div id="results-triplets" class="results"></div>
-
-    <button class="download-button" style="display:none;" onclick="downloadData('csv')">Download as CSV</button>
-    <button class="download-button" style="display:none;" onclick="downloadData('json')">Download as JSON</button>
+      placeholder="your-api-key" />
+    <div class="section" id="query-section">
+      <h2> Construct your query </h2>
+      <p class="small-text">
+        Separate search terms with a new line
+      </p>
+      <p class="small-text">
+        Put the phrase in each line within double quotes
+      </p>
+      <textarea id="query-data" rows="20"></textarea>
+      <br>
+      <button onclick="runQuery()" class="button">
+        Run
+      </button>
     </div>
+    <div class="section" id="results-section">
+      <h2> Results</h2>
+      <button class="download-button" style="display:none;" onclick="downloadData('csv')">Download as CSV</button>
+      <button class="download-button" style="display:none;" onclick="downloadData('json')">Download as JSON</button>
+      <h3>Individual article counts</h3>
+      <div id="results-single" class="results">
+      </div>
+      <h3>Pair wise article counts</h3>
+      <div id="results-pairs" class="results">
+      </div>
 
+      <h3>Triplet article counts</h3>
+      <div id="results-triplets" class="results">
+      </div>
+    </div>
   </body>
 </html>
