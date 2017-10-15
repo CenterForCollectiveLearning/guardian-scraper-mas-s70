@@ -26,15 +26,17 @@ function runQuery() {
 		"single": {},
 		"pair": {},
 		"triplet": {}
-	};	
+	};
 
 	$(".results").empty();
+
+	var apiKey = $("#api-key-input").val()
 
 	if (queryLength >= 1) {
 		queryArray.forEach(function (queryOne) {
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
-		    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
+		    'api-key': apiKey,
 		    'q': queryOne
 		  });
 		  $.ajax({
@@ -47,7 +49,7 @@ function runQuery() {
 		  }).fail(function(err) {
 		    console.log(err);
 		  });
-		})	
+		})
 	}
 
 	if (queryLength >= 2) {
@@ -58,7 +60,7 @@ function runQuery() {
 
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
-		    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
+		    'api-key': apiKey,
 		    'q': queryPair
 		  });
 
@@ -89,13 +91,13 @@ function runQuery() {
 		    url: url,
 		    method: 'GET',
 		  }).done(function(result) {
-		    window.dataArray.push([ queryTripletSemicolonSep, result.response.total ])      
-		    window.dataObject["triplet"][queryTripletSemicolonSep] = result.response.total        
+		    window.dataArray.push([ queryTripletSemicolonSep, result.response.total ])
+		    window.dataObject["triplet"][queryTripletSemicolonSep] = result.response.total
 		    $("#results-triplets").append("<p>" + queryTriplet + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
 		  });
-		})	
+		})
 	}
 
 	$('.download-button').css('display', 'block');

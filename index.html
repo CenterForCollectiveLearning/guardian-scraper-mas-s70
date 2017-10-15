@@ -5,16 +5,23 @@
     <link href="styles.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="main.js" async></script>
-    
   </head>
   <body>
     <h1>Guardian News API</h1>
+    <p>
+      Paste API key below (<a href="https://bonobo.capi.gutools.co.uk/register/developer">use this link to get your API key from Guardian</a>, it will be emailed to you)
+    </p>
+    <input id="api-key-input" type="text"
+      style="width: 400px" placeholder="your-api-key" />
+    <br />
     <p>
       Separate search terms with a new line
     </p>
     <textarea id="query-data" rows="20" cols="100"></textarea>
     <br>
-    <button onclick="runQuery()">Run</button>
+    <button onclick="runQuery()" class="button">
+      Run
+    </button>
     <br />
     <h3>Individual article counts</h3>
     <div id="results-single" class="results"></div>
@@ -22,7 +29,7 @@
     <div id="results-pairs" class="results"></div>
 
     <h3>Triplet article counts</h3>
-    <div id="results-triplets" class="results"></div>    
+    <div id="results-triplets" class="results"></div>
 
     <button class="download-button" style="display:none;" onclick="downloadData('csv')">Download as CSV</button>
     <button class="download-button" style="display:none;" onclick="downloadData('json')">Download as JSON</button>

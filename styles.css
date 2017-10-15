@@ -2,3 +2,19 @@ body {
 	margin: 50px;
 	font-family: 'Roboto', sans-serif;
 }
+
+.button {
+	background-color: #339966;
+	color: white;
+	font-size: 18px;
+	border: none;
+	margin: 10px 0px;
+	border-radius: 5px;
+	padding: 10px;
+	min-width: 80px;
+}
+
+.button:hover {
+	background-color: #44aa77;
+	cursor: pointer;
+}
