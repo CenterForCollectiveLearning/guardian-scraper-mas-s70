@@ -68,6 +68,7 @@ function runQuery() {
 		  }).done(function(result) {
 		    window.dataArray.push([ queryOne, result.response.total ])
 		    window.dataObject["single"][queryOne] = result.response.total
+				window.dataObject["pair"][queryOne] = {}
 		    $("#results-single").append("<p>" + queryOne + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -94,7 +95,7 @@ function runQuery() {
 		    method: 'GET',
 		  }).done(function(result) {
 		    window.dataArray.push([ queryPairSemicolonSep, result.response.total ])
-		    window.dataObject["pair"][queryPairSemicolonSep] = result.response.total
+		    window.dataObject["pair"][pair[0]][pair[1]] = result.response.total
 		    $("#results-pairs").append("<p>" + queryPair + " : " + result.response.total + "</p>");
 		  }).fail(function(err) {
 		    console.log(err);
@@ -134,6 +135,19 @@ function downloadData(filetype) {
 	var dataArray = window.dataArray;
 	var dataObject = window.dataObject;
 	var content = ''
+	var formattedData = []
+	for (var term1 in dataObject.pair) {
+		for (var term2 in dataObject.pair[term1]) {
+			var aggregatedCounts = {
+				"term1": term1,
+				"term2": term2,
+				"term1_count": dataObject["single"][term1],
+				"term2_count": dataObject["single"][term2],
+				"pair_count": dataObject["pair"][term1][term2],
+			}
+			formattedData.push(aggregatedCounts)
+		}
+	}
 
 	if (filetype == "csv") {
 		content = "data:text/csv;charset=utf-8,";
@@ -145,7 +159,7 @@ function downloadData(filetype) {
 	}
 
 	if (filetype == "json") {
-		var str = JSON.stringify(dataObject);
+		var str = JSON.stringify(formattedData);
 		content = "data:application/json;charset=utf-8," + encodeURIComponent(str);
 	}
 
