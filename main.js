@@ -151,7 +151,9 @@ function downloadData(filetype) {
 
 	if (filetype == "csv") {
 		content = "data:text/csv;charset=utf-8,";
-		dataArray.forEach(function(infoArray, index){
+		content += "term1,term2,term1_count,term2_count,pair_count\n";
+		formattedData.forEach(function(infoObject, index){
+			var infoArray = Object.values(infoObject)
 		  dataString = infoArray.join(",");
 		  content += index < dataArray.length ? dataString + "\n" : dataString;
 		});
