@@ -43,13 +43,24 @@ function runQuery() {
 	$(".results").empty();
 
 	var apiKey = $("#api-key-input").val()
+	var chosenYear = $("#chosen-year").val()
+
+	var fromDate = "1990-01-01"
+	var toDate = "2018-01-01"
+
+	if (chosenYear !== "all") {
+		fromDate = chosenYear + "-01-01"
+		toDate = chosenYear + "-12-31"
+	}
 
 	if (queryLength >= 1) {
 		queryArray.forEach(function (queryOne) {
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
 		    'api-key': apiKey,
-		    'q': queryOne
+		    'q': queryOne,
+				'from-date': fromDate,
+				'to-date': toDate,
 		  });
 		  $.ajax({
 		    url: url,
@@ -73,7 +84,9 @@ function runQuery() {
 		  var url = "https://content.guardianapis.com/search";
 		  url += '?' + $.param({
 		    'api-key': apiKey,
-		    'q': queryPair
+		    'q': queryPair,
+				'from-date': fromDate,
+				'to-date': toDate,
 		  });
 
 		  $.ajax({
@@ -89,28 +102,30 @@ function runQuery() {
 		})
 	}
 
-	if (queryLength >= 3) {
-		queryTriplets = queryArray.triplets( function (triplet) {
-		  var queryTriplet = triplet.join(' AND ');
-		  var queryTripletSemicolonSep = triplet.join(';');
-
-		  var url = "https://content.guardianapis.com/search";
-		  url += '?' + $.param({
-		    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
-		    'q': queryTriplet
-		  });
-		  $.ajax({
-		    url: url,
-		    method: 'GET',
-		  }).done(function(result) {
-		    window.dataArray.push([ queryTripletSemicolonSep, result.response.total ])
-		    window.dataObject["triplet"][queryTripletSemicolonSep] = result.response.total
-		    $("#results-triplets").append("<p>" + queryTriplet + " : " + result.response.total + "</p>");
-		  }).fail(function(err) {
-		    console.log(err);
-		  });
-		})
-	}
+	// if (queryLength >= 3) {
+	// 	queryTriplets = queryArray.triplets( function (triplet) {
+	// 	  var queryTriplet = triplet.join(' AND ');
+	// 	  var queryTripletSemicolonSep = triplet.join(';');
+	//
+	// 	  var url = "https://content.guardianapis.com/search";
+	// 	  url += '?' + $.param({
+	// 	    'api-key': "89264c96-0794-4cb6-b61d-d87ebbc8c3f6",
+	// 	    'q': queryTriplet,
+	// 			'from-date': fromDate,
+	// 			'to-date': toDate,
+	// 	  });
+	// 	  $.ajax({
+	// 	    url: url,
+	// 	    method: 'GET',
+	// 	  }).done(function(result) {
+	// 	    window.dataArray.push([ queryTripletSemicolonSep, result.response.total ])
+	// 	    window.dataObject["triplet"][queryTripletSemicolonSep] = result.response.total
+	// 	    $("#results-triplets").append("<p>" + queryTriplet + " : " + result.response.total + "</p>");
+	// 	  }).fail(function(err) {
+	// 	    console.log(err);
+	// 	  });
+	// 	})
+	// }
 
 	$('.download-button').css('display', 'block');
 }
